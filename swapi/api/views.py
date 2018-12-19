@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from api.models import Planet, People
+from api.models import People
 from api.fixtures import SINGLE_PEOPLE_OBJECT, PEOPLE_OBJECTS
 from api.serializers import serialize_people_as_json
 

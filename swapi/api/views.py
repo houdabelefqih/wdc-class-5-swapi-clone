@@ -98,7 +98,7 @@ def people_detail_view(request, people_id):
         data = serialize_people_as_json(people)
     elif request.method in ['PUT', 'PATCH']:
         # PUT/PATCH /people/:id
-        for field in ['name', 'homeworld', 'height', 'mass', 'hair_color']:
+        for field in ['name', 'height', 'mass', 'hair_color']:
             if not field in payload:
                 if request.method == 'PATCH':
                     continue

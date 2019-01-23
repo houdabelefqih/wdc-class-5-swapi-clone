@@ -22,7 +22,7 @@ If you have your client up and running, it's time to do our first approach to bu
 
 ### 2) Playing with the `training` app
 
-This Django project provides a `tracking` app. The goal of this app is doing an initial practice of how to use Django views to construct the basic structure of a web service. We will learn how to return different content types (JSON, HTML, XML, etc), use the different HTTP methods (GET, POST, etc), handle headers, status codes, and more.
+This Django project provides a `training` app. The goal of this app is doing an initial practice of how to use Django views to construct the basic structure of a web service. We will learn how to return different content types (JSON, HTML, XML, etc), use the different HTTP methods (GET, POST, etc), handle headers, status codes, and more.
 
 Each function in the `training/views.py` module provides a short explanation of what the view is supposed to do. Just follow the instructions and implement each of them from top to bottom. Once finished, you should have a clearer understanding of how APIs with Django work.
 

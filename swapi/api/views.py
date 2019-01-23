@@ -38,7 +38,7 @@ def people_list_view(request):
     """
     if request.body:
         try:
-            payload = json.loads(request.body)
+            payload = json.loads(request.body.decode('utf-8'))
         except ValueError:
             return JsonResponse(
                 {"success": False, "msg": "Provide a valid JSON payload"},
@@ -108,7 +108,7 @@ def people_detail_view(request, people_id):
 
     if request.body:
         try:
-            payload = json.loads(request.body)
+            payload = json.loads(request.body.decode('utf-8'))
         except ValueError:
             return JsonResponse(
                 {"success": False, "msg": "Provide a valid JSON payload"},
@@ -186,7 +186,7 @@ class PeopleView(View):
                 status=400)
 
         try:
-            payload = json.loads(self.request.body)
+            payload = json.loads(self.request.body.decode('utf-8'))
         except ValueError:
             return JsonResponse(
                 {"success": False, "msg": "Provide a valid JSON payload"},
@@ -262,7 +262,7 @@ class PeopleView(View):
                 {"success": False, "msg": "Could not find people with id: {}".format(people_id)},
                 status=404)
         try:
-            payload = json.loads(self.request.body)
+            payload = json.loads(self.request.body.decode('utf-8'))
         except ValueError:
             return JsonResponse(
                 {"success": False, "msg": "Provide a valid JSON payload"},
@@ -277,7 +277,7 @@ class PeopleView(View):
                 {"success": False, "msg": "Could not find people with id: {}".format(people_id)},
                 status=404)
         try:
-            payload = json.loads(self.request.body)
+            payload = json.loads(self.request.body.decode('utf-8'))
         except ValueError:
             return JsonResponse(
                 {"success": False, "msg": "Provide a valid JSON payload"},

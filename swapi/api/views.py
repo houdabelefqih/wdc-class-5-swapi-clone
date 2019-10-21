@@ -38,7 +38,7 @@ def people_list_view(request):
     if request.method == 'GET':
         people_data = [serialize_people_as_json(people) for people in People.objects.all()]
 
-        return JsonResponse(people_data, safe= False, status=200)
+        return JsonResponse(people_data, safe=False, status=200)
 
     elif request.method == 'POST':
         if not request.body:
@@ -63,8 +63,6 @@ def people_list_view(request):
                 return JsonResponse({"success": False, "msg": "Provided payload is not valid"}, status=400)
 
             return JsonResponse(serialize_people_as_json(newly_created_people), status=201)
-
-
 
     else:
         return JsonResponse({"success": False, "msg": "Invalid HTTP method"}, status=400)
@@ -91,4 +89,73 @@ def people_detail_view(request, people_id):
 
         * If submited payload is nos JSON valid, return a `400` response.
     """
-    pass
+
+    if request.method == 'GET':
+        try:
+            people_details = People.objects.get(id=people_id)
+
+        except People.DoesNotExist:
+            return JsonResponse({"success": False, "msg": "Id does not exist"}, status=400)
+
+        return JsonResponse(serialize_people_as_json(people_details), safe=False, status=200)
+
+    elif request.method == 'DELETE':
+        try:
+            People.objects.get(pk=people_id).delete()
+
+        except People.DoesNotExist:
+            return JsonResponse({"success": False, "msg": "Id does not exist"}, status=400)
+
+        return JsonResponse({"success": True},  status=200)
+
+    elif request.method == 'PATCH':
+        if not request.body:
+            return JsonResponse({"success": False, "msg": "Empty payload"}, status=400)
+
+        else:
+            try:
+                payload = json.loads(request.body)
+
+            except ValueError:
+                return JsonResponse({"success": False, "msg": "Provide a valid JSON payload"}, status=400)
+
+            try:
+                people_details = People.objects.get(id=people_id)
+                for key in payload.keys():
+                    setattr(people_details, key, payload[key])
+                    people_details.save()
+
+            except (ValueError, KeyError):
+                return JsonResponse({"success": False, "msg": "Provided payload is not valid"}, status=400)
+
+            return JsonResponse(serialize_people_as_json(People.objects.get(id=people_id)), status=200)
+
+    elif request.method == 'PUT':
+        if not request.body:
+            return JsonResponse({"success": False, "msg": "Empty payload"}, status=400)
+
+        else:
+            try:
+                payload = json.loads(request.body)
+
+            except ValueError:
+                return JsonResponse({"success": False, "msg": "Provide a valid JSON payload"}, status=400)
+
+            try:
+                People.objects.filter(id=people_id).update(
+                    name=payload['name'],
+                    height=payload['height'],
+                    mass=payload['mass'],
+                    hair_color=payload['hair_color']
+                )
+
+            except ValueError:
+                return JsonResponse({"success": False, "msg": "Provided payload is not valid"}, status=400)
+
+            except KeyError:
+                return JsonResponse({"success": False, "msg": "Missing field in full update"}, status=400)
+
+            return JsonResponse(serialize_people_as_json(People.objects.get(id=people_id)), status=200)
+
+    else:
+        return JsonResponse({"success": False, "msg": "Invalid HTTP method"}, status=400)

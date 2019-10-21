@@ -35,7 +35,39 @@ def people_list_view(request):
 
         * If submited payload is nos JSON valid, return a `400` response.
     """
-    pass
+    if request.method == 'GET':
+        people_data = [serialize_people_as_json(people) for people in People.objects.all()]
+
+        return JsonResponse(people_data, safe= False, status=200)
+
+    elif request.method == 'POST':
+        if not request.body:
+            return JsonResponse({"success": False, "msg": "Empty payload"}, status=400)
+
+        else:
+            try:
+                payload = json.loads(request.body)
+
+            except ValueError:
+                return JsonResponse({"success": False, "msg": "Provide a valid JSON payload"}, status=400)
+
+            try:
+                newly_created_people = People.objects.create(
+                    name=payload['name'],
+                    height=payload['height'],
+                    mass=payload['mass'],
+                    hair_color=payload['hair_color']
+                )
+
+            except (ValueError, KeyError):
+                return JsonResponse({"success": False, "msg": "Provided payload is not valid"}, status=400)
+
+            return JsonResponse(serialize_people_as_json(newly_created_people), status=201)
+
+
+
+    else:
+        return JsonResponse({"success": False, "msg": "Invalid HTTP method"}, status=400)
 
 
 @csrf_exempt
